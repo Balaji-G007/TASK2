@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login – ApexPlanet</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet"/>
+
+  <style>
+    /* ─── CSS Variables (Custom Color Palette) ─── */
+    :root {
+      --teal:        #0d6e6e;
+      --teal-dark:   #094f4f;
+      --teal-light:  #b2dfdb;
+      --accent:      #f4a261;
+      --bg:          #f0fafa;
+      --card-bg:     #ffffff;
+      --text-dark:   #0d1f1f;
+      --text-muted:  #5a7878;
+      --radius:      18px;
+      --shadow:      0 20px 60px rgba(13,110,110,.13);
+    }
+
+    /* ─── Reset & Base ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── Navbar ─── */
+    .navbar {
+      background: var(--teal-dark);
+      padding: 14px 32px;
+      box-shadow: 0 2px 16px rgba(0,0,0,.18);
+    }
+    .navbar-brand {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.5rem;
+      color: #fff !important;
+      letter-spacing: -0.5px;
+    }
+    .navbar-brand span { color: var(--accent); }
+    .nav-link {
+      color: rgba(255,255,255,.78) !important;
+      font-weight: 500;
+      transition: color .2s;
+    }
+    .nav-link:hover { color: var(--accent) !important; }
+    .navbar-toggler { border-color: rgba(255,255,255,.3); }
+    .navbar-toggler-icon { filter: invert(1); }
+
+    /* ─── Hero Section ─── */
+    .hero {
+      background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 100%);
+      padding: 72px 0 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 420px; height: 420px;
+      background: rgba(255,255,255,.05);
+      border-radius: 50%;
+      top: -120px; right: -80px;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 260px; height: 260px;
+      background: rgba(244,162,97,.12);
+      border-radius: 50%;
+      bottom: -80px; left: 60px;
+    }
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      color: #fff;
+      line-height: 1.15;
+    }
+    .hero p {
+      color: rgba(255,255,255,.72);
+      font-size: 1.1rem;
+      margin-top: 12px;
+    }
+
+    /* ─── Card ─── */
+    .auth-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 44px 40px;
+      animation: slideUp .55s cubic-bezier(.22,1,.36,1) both;
+    }
+    @keyframes slideUp {
+      from { opacity:0; transform:translateY(32px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .auth-card h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.7rem;
+      color: var(--teal-dark);
+    }
+    .auth-card .subtitle { color: var(--text-muted); font-size: .95rem; }
+
+    /* ─── Form ─── */
+    .form-label {
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+    }
+    .form-control {
+      border: 1.5px solid #d0e8e8;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: .97rem;
+      transition: border-color .2s, box-shadow .2s;
+      background: #f8fdfd;
+    }
+    .form-control:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(13,110,110,.12);
+      background: #fff;
+      outline: none;
+    }
+    .input-group .form-control { border-right: none; border-radius: 10px 0 0 10px; }
+    .input-group .btn-outline-secondary {
+      border: 1.5px solid #d0e8e8;
+      border-left: none;
+      border-radius: 0 10px 10px 0;
+      background: #f8fdfd;
+      color: var(--text-muted);
+      transition: background .2s;
+    }
+    .input-group .btn-outline-secondary:hover { background: #e0f2f2; }
+
+    /* ─── Primary Button ─── */
+    .btn-primary-custom {
+      background: var(--teal);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 13px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: .3px;
+      width: 100%;
+      cursor: pointer;
+      transition: background .22s, transform .15s, box-shadow .22s;
+      box-shadow: 0 4px 18px rgba(13,110,110,.22);
+    }
+    .btn-primary-custom:hover {
+      background: var(--teal-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(13,110,110,.3);
+    }
+    .btn-primary-custom:active { transform: translateY(0); }
+
+    /* ─── Divider ─── */
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      color: var(--text-muted); font-size: .85rem; margin: 20px 0;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px; background: #d8eded;
+    }
+
+    /* ─── Social Buttons ─── */
+    .btn-social {
+      border: 1.5px solid #d0e8e8;
+      border-radius: 10px;
+      padding: 10px;
+      font-weight: 500;
+      font-size: .9rem;
+      width: 100%;
+      background: #fff;
+      cursor: pointer;
+      transition: background .2s, border-color .2s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-social:hover { background: var(--bg); border-color: var(--teal-light); }
+
+    /* ─── Link ─── */
+    .auth-link { color: var(--teal); font-weight: 600; text-decoration: none; }
+    .auth-link:hover { color: var(--teal-dark); text-decoration: underline; }
+
+    /* ─── AJAX Status Badge ─── */
+    #ajaxStatus {
+      display: none;
+      margin-top: 10px;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: .92rem;
+    }
+
+    /* ─── Features Column ─── */
+    .features-col { padding: 28px 0; }
+    .feature-item {
+      display: flex; align-items: flex-start; gap: 14px;
+      margin-bottom: 28px;
+      animation: fadeIn .5s ease both;
+    }
+    .feature-item:nth-child(2) { animation-delay: .1s; }
+    .feature-item:nth-child(3) { animation-delay: .2s; }
+    .feature-item:nth-child(4) { animation-delay: .3s; }
+    @keyframes fadeIn { from { opacity:0; transform:translateX(-12px); } to { opacity:1; transform:none; } }
+    .feature-icon {
+      width: 48px; height: 48px; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1.3rem;
+      box-shadow: 0 4px 14px rgba(13,110,110,.2);
+    }
+    .feature-text h6 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      color: var(--teal-dark);
+      margin-bottom: 2px;
+    }
+    .feature-text p { font-size: .88rem; color: var(--text-muted); margin: 0; }
+
+    /* ─── Footer ─── */
+    footer {
+      background: var(--teal-dark);
+      color: rgba(255,255,255,.65);
+      text-align: center;
+      padding: 20px 16px;
+      font-size: .88rem;
+      margin-top: auto;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    /* ─── Invalid Feedback ─── */
+    .invalid-feedback { font-size: .83rem; }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 767px) {
+      .auth-card { padding: 28px 20px; }
+      .hero { padding: 48px 0 56px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════ NAVBAR ══════════════ -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="#">Apex<span>Planet</span></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto gap-2">
+          <li class="nav-item"><a class="nav-link active" href="login.html">Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="register.html">Register</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══════════════ HERO ══════════════ -->
+  <section class="hero">
+    <div class="container text-center position-relative">
+      <h1>Welcome Back 👋</h1>
+      <p>Sign in to your ApexPlanet account and continue learning.</p>
+    </div>
+  </section>
+
+  <!-- ══════════════ MAIN CONTENT ══════════════ -->
+  <main class="container py-5">
+    <div class="row justify-content-center align-items-start g-5">
+
+      <!-- Features (hidden on mobile) -->
+      <div class="col-lg-4 d-none d-lg-block features-col">
+        <div class="feature-item">
+          <div class="feature-icon"><i class="bi bi-shield-lock-fill"></i></div>
+          <div class="feature-text">
+            <h6>Secure Login</h6>
+            <p>Your credentials are encrypted and safe with us.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="bi bi-grid-fill"></i></div>
+          <div class="feature-text">
+            <h6>Dashboard Access</h6>
+            <p>Get instant access to all your courses and projects.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="bi bi-people-fill"></i></div>
+          <div class="feature-text">
+            <h6>Community</h6>
+            <p>Connect with thousands of developers globally.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="bi bi-trophy-fill"></i></div>
+          <div class="feature-text">
+            <h6>Track Progress</h6>
+            <p>Monitor your learning milestones and achievements.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Login Card -->
+      <div class="col-12 col-md-8 col-lg-5">
+        <div class="auth-card">
+          <h2>Sign In</h2>
+          <p class="subtitle mt-1 mb-4">Don't have an account? <a href="register.html" class="auth-link">Register here</a></p>
+
+          <form id="loginForm" novalidate>
+
+            <!-- Email -->
+            <div class="mb-3">
+              <label class="form-label" for="loginEmail">Email address</label>
+              <input type="email" id="loginEmail" class="form-control" placeholder="you@example.com" required/>
+              <div class="invalid-feedback">Please enter a valid email.</div>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+              <label class="form-label" for="loginPassword">Password</label>
+              <div class="input-group">
+                <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required minlength="6"/>
+                <button class="btn btn-outline-secondary" type="button" id="toggleLoginPwd" tabindex="-1">
+                  <i class="bi bi-eye" id="eyeIcon"></i>
+                </button>
+              </div>
+              <div class="invalid-feedback d-block" id="pwdErr" style="display:none!important"></div>
+            </div>
+
+            <!-- Remember + Forgot -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="rememberMe"/>
+                <label class="form-check-label" for="rememberMe" style="font-size:.9rem">Remember me</label>
+              </div>
+              <a href="#" class="auth-link" style="font-size:.9rem">Forgot password?</a>
+            </div>
+
+            <!-- Submit -->
+            <button class="btn-primary-custom" type="submit">
+              <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+            </button>
+
+            <!-- AJAX Status -->
+            <div id="ajaxStatus" class="alert"></div>
+
+            <!-- Divider -->
+            <div class="divider">or continue with</div>
+
+            <!-- Social -->
+            <div class="row g-2">
+              <div class="col-6">
+                <button type="button" class="btn-social">
+                  <img src="https://www.google.com/favicon.ico" width="20" alt="Google"/> Google
+                </button>
+              </div>
+              <div class="col-6">
+                <button type="button" class="btn-social">
+                  <i class="bi bi-github" style="font-size:1.1rem"></i> GitHub
+                </button>
+              </div>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ══════════════ FOOTER ══════════════ -->
+  <footer>
+    &copy; 2026 <a href="#">ApexPlanet Software Pvt. Ltd.</a> — All rights reserved.
+  </footer>
+
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    /* ── Show / Hide Password ── */
+    const toggleBtn = document.getElementById('toggleLoginPwd');
+    const pwdInput  = document.getElementById('loginPassword');
+    const eyeIcon   = document.getElementById('eyeIcon');
+
+    toggleBtn.addEventListener('click', () => {
+      const isHidden = pwdInput.type === 'password';
+      pwdInput.type  = isHidden ? 'text' : 'password';
+      eyeIcon.className = isHidden ? 'bi bi-eye-slash' : 'bi bi-eye';
+    });
+
+    /* ── Form Validation ── */
+    const loginForm = document.getElementById('loginForm');
+
+    loginForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const email    = document.getElementById('loginEmail');
+      const password = document.getElementById('loginPassword');
+      const pwdErr   = document.getElementById('pwdErr');
+      let valid = true;
+
+      // Email check
+      if (!email.checkValidity()) {
+        email.classList.add('is-invalid');
+        valid = false;
+      } else {
+        email.classList.remove('is-invalid');
+        email.classList.add('is-valid');
+      }
+
+      // Password length check
+      if (password.value.length < 6) {
+        password.classList.add('is-invalid');
+        pwdErr.textContent = 'Password must be at least 6 characters.';
+        pwdErr.style.display = 'block';
+        valid = false;
+      } else {
+        password.classList.remove('is-invalid');
+        password.classList.add('is-valid');
+        pwdErr.style.display = 'none';
+      }
+
+      if (valid) checkEmailAJAX(email.value);
+    });
+
+    /* ── AJAX Simulation (check if email exists) ── */
+    function checkEmailAJAX(email) {
+      const statusBox = document.getElementById('ajaxStatus');
+      statusBox.style.display = 'block';
+      statusBox.className = 'alert alert-info';
+      statusBox.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Verifying credentials…';
+
+      // Simulate network delay
+      setTimeout(() => {
+        const fakeRegistered = ['test@example.com', 'user@apex.com'];
+        if (fakeRegistered.includes(email.toLowerCase())) {
+          statusBox.className = 'alert alert-success';
+          statusBox.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>Login successful! Redirecting…';
+        } else {
+          statusBox.className = 'alert alert-danger';
+          statusBox.innerHTML = '<i class="bi bi-x-circle-fill me-2"></i>No account found with this email.';
+        }
+      }, 1400);
+    }
+  </script>
+</body>
+</html>

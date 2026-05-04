@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register – ApexPlanet</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --teal:        #0d6e6e;
+      --teal-dark:   #094f4f;
+      --teal-light:  #b2dfdb;
+      --accent:      #f4a261;
+      --bg:          #f0fafa;
+      --card-bg:     #ffffff;
+      --text-dark:   #0d1f1f;
+      --text-muted:  #5a7878;
+      --radius:      18px;
+      --shadow:      0 20px 60px rgba(13,110,110,.13);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin:0; padding:0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
+
+    /* Navbar */
+    .navbar { background: var(--teal-dark); padding: 14px 32px; box-shadow: 0 2px 16px rgba(0,0,0,.18); }
+    .navbar-brand { font-family:'Syne',sans-serif; font-weight:800; font-size:1.5rem; color:#fff!important; }
+    .navbar-brand span { color: var(--accent); }
+    .nav-link { color: rgba(255,255,255,.78)!important; font-weight:500; transition: color .2s; }
+    .nav-link:hover { color: var(--accent)!important; }
+    .navbar-toggler { border-color: rgba(255,255,255,.3); }
+    .navbar-toggler-icon { filter: invert(1); }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, var(--teal) 0%, #1a9090 100%);
+      padding: 64px 0 72px; position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content:''; position:absolute;
+      width:360px; height:360px; background:rgba(255,255,255,.06);
+      border-radius:50%; top:-100px; left:-80px;
+    }
+    .hero h1 { font-family:'Syne',sans-serif; font-weight:800; font-size:clamp(1.8rem,5vw,3rem); color:#fff; }
+    .hero p  { color:rgba(255,255,255,.72); font-size:1.05rem; margin-top:10px; }
+
+    /* Steps indicator */
+    .steps-bar {
+      display: flex; gap: 0; margin-bottom: 32px;
+      border-radius: 12px; overflow: hidden;
+      border: 1.5px solid #d0e8e8;
+    }
+    .step {
+      flex: 1; padding: 12px 8px; text-align: center;
+      font-family:'Syne',sans-serif; font-weight:600; font-size:.82rem;
+      color: var(--text-muted); background: #fff;
+      transition: background .3s, color .3s;
+      cursor: default;
+    }
+    .step.active { background: var(--teal); color:#fff; }
+    .step.done   { background: var(--teal-light); color: var(--teal-dark); }
+    .step-num { display:block; font-size:1.1rem; font-weight:800; }
+
+    /* Card */
+    .auth-card {
+      background: var(--card-bg); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 44px 40px;
+      animation: slideUp .55s cubic-bezier(.22,1,.36,1) both;
+    }
+    @keyframes slideUp {
+      from { opacity:0; transform:translateY(32px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .auth-card h2 { font-family:'Syne',sans-serif; font-weight:700; font-size:1.7rem; color:var(--teal-dark); }
+    .auth-card .subtitle { color:var(--text-muted); font-size:.95rem; }
+
+    /* Form */
+    .form-label { font-weight:500; color:var(--text-dark); margin-bottom:6px; }
+    .form-control {
+      border: 1.5px solid #d0e8e8; border-radius:10px;
+      padding:12px 16px; font-size:.97rem;
+      transition: border-color .2s, box-shadow .2s;
+      background: #f8fdfd;
+    }
+    .form-control:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(13,110,110,.12);
+      background: #fff; outline:none;
+    }
+    .input-group .form-control { border-right:none; border-radius:10px 0 0 10px; }
+    .input-group .btn-outline-secondary {
+      border: 1.5px solid #d0e8e8; border-left:none;
+      border-radius: 0 10px 10px 0; background:#f8fdfd;
+      color:var(--text-muted); transition:background .2s;
+    }
+    .input-group .btn-outline-secondary:hover { background:#e0f2f2; }
+
+    /* Strength bar */
+    .strength-bar { height:5px; border-radius:4px; margin-top:8px; background:#e0eded; overflow:hidden; }
+    .strength-fill { height:100%; width:0; border-radius:4px; transition:width .3s, background .3s; }
+    .strength-label { font-size:.78rem; margin-top:4px; font-weight:600; }
+
+    /* Password match indicator */
+    .match-indicator { font-size:.82rem; font-weight:600; margin-top:5px; }
+
+    /* Button */
+    .btn-primary-custom {
+      background: var(--teal); color:#fff; border:none; border-radius:10px;
+      padding:13px; font-family:'Syne',sans-serif; font-weight:700;
+      font-size:1rem; width:100%; cursor:pointer;
+      transition: background .22s, transform .15s, box-shadow .22s;
+      box-shadow: 0 4px 18px rgba(13,110,110,.22);
+    }
+    .btn-primary-custom:hover { background:var(--teal-dark); transform:translateY(-2px); box-shadow:0 8px 28px rgba(13,110,110,.3); }
+    .btn-primary-custom:disabled { background:#a0c4c4; cursor:not-allowed; transform:none; box-shadow:none; }
+
+    /* AJAX badge */
+    #usernameStatus { font-size:.82rem; margin-top:5px; font-weight:600; }
+    #regStatus { display:none; margin-top:12px; border-radius:8px; padding:10px 14px; font-size:.92rem; }
+
+    /* Auth link */
+    .auth-link { color:var(--teal); font-weight:600; text-decoration:none; }
+    .auth-link:hover { color:var(--teal-dark); text-decoration:underline; }
+
+    /* Checkbox */
+    .form-check-input:checked { background-color:var(--teal); border-color:var(--teal); }
+
+    /* Footer */
+    footer {
+      background: var(--teal-dark); color:rgba(255,255,255,.65);
+      text-align:center; padding:20px 16px; font-size:.88rem; margin-top:auto;
+    }
+    footer a { color:var(--accent); text-decoration:none; }
+
+    /* Responsive */
+    @media (max-width:767px) { .auth-card { padding:28px 20px; } }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="#">Apex<span>Planet</span></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto gap-2">
+          <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+          <li class="nav-item"><a class="nav-link active" href="register.html">Register</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container text-center position-relative">
+      <h1>Create Your Account 🚀</h1>
+      <p>Join ApexPlanet and start your frontend development journey today.</p>
+    </div>
+  </section>
+
+  <!-- MAIN -->
+  <main class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-9 col-lg-6">
+
+        <!-- Step indicator -->
+        <div class="steps-bar mb-4">
+          <div class="step active" id="step1"><span class="step-num">1</span>Your Info</div>
+          <div class="step"        id="step2"><span class="step-num">2</span>Security</div>
+          <div class="step"        id="step3"><span class="step-num">3</span>Done</div>
+        </div>
+
+        <div class="auth-card">
+          <h2>Register</h2>
+          <p class="subtitle mt-1 mb-4">Already have an account? <a href="login.html" class="auth-link">Sign in</a></p>
+
+          <form id="regForm" novalidate>
+
+            <!-- Full Name -->
+            <div class="mb-3">
+              <label class="form-label" for="fullName">Full Name</label>
+              <input type="text" id="fullName" class="form-control" placeholder="John Doe" required minlength="2"/>
+              <div class="invalid-feedback">Please enter your full name (min 2 chars).</div>
+            </div>
+
+            <!-- Username -->
+            <div class="mb-3">
+              <label class="form-label" for="username">Username</label>
+              <input type="text" id="username" class="form-control" placeholder="johndoe123" required minlength="3"/>
+              <div id="usernameStatus"></div>
+              <div class="invalid-feedback">Username must be at least 3 characters.</div>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+              <label class="form-label" for="regEmail">Email Address</label>
+              <input type="email" id="regEmail" class="form-control" placeholder="you@example.com" required/>
+              <div class="invalid-feedback">Please enter a valid email address.</div>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+              <label class="form-label" for="regPassword">Password</label>
+              <div class="input-group">
+                <input type="password" id="regPassword" class="form-control" placeholder="Min. 8 characters" required minlength="8"/>
+                <button class="btn btn-outline-secondary" type="button" id="toggleRegPwd"><i class="bi bi-eye" id="eyeReg"></i></button>
+              </div>
+              <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+              <div class="strength-label" id="strengthLabel" style="color:var(--text-muted)">Enter a password</div>
+              <div class="invalid-feedback">Password must be at least 8 characters.</div>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="mb-3">
+              <label class="form-label" for="confirmPassword">Confirm Password</label>
+              <div class="input-group">
+                <input type="password" id="confirmPassword" class="form-control" placeholder="Re-enter password" required/>
+                <button class="btn btn-outline-secondary" type="button" id="toggleConfPwd"><i class="bi bi-eye" id="eyeConf"></i></button>
+              </div>
+              <div class="match-indicator" id="matchIndicator"></div>
+              <div class="invalid-feedback">Please confirm your password.</div>
+            </div>
+
+            <!-- Terms -->
+            <div class="form-check mb-4">
+              <input class="form-check-input" type="checkbox" id="agreeTerms" required/>
+              <label class="form-check-label" for="agreeTerms" style="font-size:.9rem">
+                I agree to the <a href="#" class="auth-link">Terms of Service</a> and <a href="#" class="auth-link">Privacy Policy</a>
+              </label>
+              <div class="invalid-feedback">You must agree before registering.</div>
+            </div>
+
+            <!-- Submit -->
+            <button class="btn-primary-custom" type="submit" id="submitBtn">
+              <i class="bi bi-person-plus-fill me-2"></i>Create Account
+            </button>
+
+            <!-- Status -->
+            <div id="regStatus" class="alert"></div>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    &copy; 2026 <a href="#">ApexPlanet Software Pvt. Ltd.</a> — All rights reserved.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    /* ─── Show / Hide Password ─── */
+    function setupToggle(btnId, inputId, iconId) {
+      document.getElementById(btnId).addEventListener('click', () => {
+        const inp = document.getElementById(inputId);
+        const ico = document.getElementById(iconId);
+        const hidden = inp.type === 'password';
+        inp.type = hidden ? 'text' : 'password';
+        ico.className = hidden ? 'bi bi-eye-slash' : 'bi bi-eye';
+      });
+    }
+    setupToggle('toggleRegPwd',  'regPassword',     'eyeReg');
+    setupToggle('toggleConfPwd', 'confirmPassword', 'eyeConf');
+
+    /* ─── Password Strength ─── */
+    const regPwd     = document.getElementById('regPassword');
+    const fillBar    = document.getElementById('strengthFill');
+    const strengthLbl= document.getElementById('strengthLabel');
+
+    regPwd.addEventListener('input', () => {
+      const val = regPwd.value;
+      let score = 0;
+      if (val.length >= 8)             score++;
+      if (/[A-Z]/.test(val))           score++;
+      if (/[0-9]/.test(val))           score++;
+      if (/[^A-Za-z0-9]/.test(val))   score++;
+
+      const levels = [
+        { w:'0%',   c:'#e0eded', label:'' },
+        { w:'25%',  c:'#e74c3c', label:'Weak' },
+        { w:'50%',  c:'#f39c12', label:'Fair' },
+        { w:'75%',  c:'#3498db', label:'Good' },
+        { w:'100%', c:'#0d6e6e', label:'Strong 🔒' }
+      ];
+      const lv = levels[score];
+      fillBar.style.width      = lv.w;
+      fillBar.style.background = lv.c;
+      strengthLbl.textContent  = lv.label;
+      strengthLbl.style.color  = lv.c;
+    });
+
+    /* ─── Password Match Check ─── */
+    const confPwd   = document.getElementById('confirmPassword');
+    const matchInd  = document.getElementById('matchIndicator');
+
+    confPwd.addEventListener('input', () => {
+      if (!confPwd.value) { matchInd.textContent = ''; return; }
+      const match = regPwd.value === confPwd.value;
+      matchInd.textContent = match ? '✅ Passwords match' : '❌ Passwords do not match';
+      matchInd.style.color = match ? 'var(--teal)' : '#e74c3c';
+    });
+
+    /* ─── AJAX: Check Username ─── */
+    const usernameInput = document.getElementById('username');
+    const usernameStatus= document.getElementById('usernameStatus');
+    const takenNames    = ['johndoe123', 'admin', 'test_user', 'apexplanet'];
+    let   usernameTimer;
+
+    usernameInput.addEventListener('input', () => {
+      clearTimeout(usernameTimer);
+      const val = usernameInput.value.trim();
+      if (val.length < 3) { usernameStatus.textContent = ''; return; }
+
+      usernameStatus.textContent = '⏳ Checking availability…';
+      usernameStatus.style.color = 'var(--text-muted)';
+
+      usernameTimer = setTimeout(() => {
+        if (takenNames.includes(val.toLowerCase())) {
+          usernameStatus.textContent = '❌ Username already taken';
+          usernameStatus.style.color = '#e74c3c';
+        } else {
+          usernameStatus.textContent = '✅ Username available!';
+          usernameStatus.style.color = 'var(--teal)';
+        }
+      }, 900);
+    });
+
+    /* ─── Form Validation & Submit ─── */
+    const regForm  = document.getElementById('regForm');
+    const regStatus= document.getElementById('regStatus');
+    const submitBtn= document.getElementById('submitBtn');
+
+    regForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      let valid = true;
+
+      // Helper
+      const validate = (el, condition) => {
+        if (condition) { el.classList.remove('is-invalid'); el.classList.add('is-valid'); }
+        else           { el.classList.add('is-invalid'); el.classList.remove('is-valid'); valid = false; }
+      };
+
+      const fullName = document.getElementById('fullName');
+      const email    = document.getElementById('regEmail');
+      const terms    = document.getElementById('agreeTerms');
+
+      validate(fullName, fullName.value.trim().length >= 2);
+      validate(usernameInput, usernameInput.value.trim().length >= 3);
+      validate(email, email.checkValidity());
+      validate(regPwd, regPwd.value.length >= 8);
+      validate(terms, terms.checked);
+
+      // Password match
+      if (regPwd.value !== confPwd.value || confPwd.value === '') {
+        confPwd.classList.add('is-invalid');
+        valid = false;
+      } else {
+        confPwd.classList.remove('is-invalid');
+        confPwd.classList.add('is-valid');
+      }
+
+      // Username taken
+      if (takenNames.includes(usernameInput.value.trim().toLowerCase())) {
+        usernameInput.classList.add('is-invalid');
+        valid = false;
+      }
+
+      if (valid) simulateRegistration();
+    });
+
+    function simulateRegistration() {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating account…';
+      regStatus.style.display = 'block';
+      regStatus.className = 'alert alert-info';
+      regStatus.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Submitting your details…';
+
+      // Update step bar
+      document.getElementById('step1').classList.replace('active','done');
+      document.getElementById('step2').classList.add('active');
+
+      setTimeout(() => {
+        document.getElementById('step2').classList.replace('active','done');
+        document.getElementById('step3').classList.add('active');
+        regStatus.className = 'alert alert-success';
+        regStatus.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i><strong>Account created!</strong> Welcome to ApexPlanet. <a href="login.html" class="auth-link">Sign in now →</a>';
+        submitBtn.innerHTML = '<i class="bi bi-check-lg me-2"></i>Registered!';
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
